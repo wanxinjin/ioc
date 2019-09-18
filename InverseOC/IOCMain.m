@@ -10,19 +10,11 @@ setPaths();
 
 %% Define internal settings
 overwriteFiles = 1;
-% confi gFilePath = '../Data/IOC_gitupload_test.json';
-configFilePath = '../Data/IOC_gitupload_jumping2D.json';
-% configFilePath = '../Data/IOC_IITFatigue_test.json';
-% if ~exist('configFilePath', 'var')
-%         configFilePath = '../Data/IOC_IITFatigue_Full.json';
-% %        configFilePath = '../Data/IOC_IITFatigue_Sharcnet_subj05.json';
-% %        configFilePath = '../Data/IOC_IITFatigue_Sharcnet_subj09.json';
-%        configFilePath = '../Data/IOC_IITFatigue_Sharcnet_subj10.json';
-% end
+configFilePath = '../Data/IOC_IITFatigue_test.json';
 
 %% Create and/or look for folder where solutions are going to be saved
-% currentDate = datestr(datetime("now"),"yyyy_mm_dd_HH_MM_SS");
-currentDate = 'result03';
+% currentDate = datestr(datetime('now'),'yyyy_mm_dd_HH_MM_SS');
+currentDate = 'result';
 savePath = sprintf('../Data/IOC/%s/', currentDate);
 
 %% Load json file with list of all trials on which IOC will be run
@@ -31,14 +23,13 @@ configFile = jsondecode(fileread(configFilePath));
 %% Load json with information about each trial
 n = length(configFile.Files);
 
-for i=1:n
+for i=1:1
     runParam = [];
     trialInfo = configFile.Files(i);
     
     % if the source matfile is not found in the json path, search these
     % following locations as well
-    potentialBasePaths = {'/project/6001934/data/', ...
-        trialInfo.basepath};
+    potentialBasePaths = {'H:/data', trialInfo.basepath};
     
     for j = 1:length(potentialBasePaths)
         targetPath = fullfile(potentialBasePaths{j}, trialInfo.subpath);
@@ -75,7 +66,8 @@ for i=1:n
     subsavePath = fullfile(savePath, trialInfo.runName);
     [status, alreadyExist] = checkMkdir(subsavePath);
     if ~alreadyExist || overwriteFiles
-        IOCRun(trialInfo, subsavePath);
+        %         IOCRun(trialInfo, subsavePath);
+        IOCIncomplete(trialInfo,subsavePath);
     end
 end
 
